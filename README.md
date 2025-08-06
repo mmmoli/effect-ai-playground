@@ -1,15 +1,7 @@
-# Effect Package Template
-
-This template provides a solid foundation for building scalable and maintainable TypeScript package with Effect. 
-
-## Running Code
-
-This template leverages [tsx](https://tsx.is) to allow execution of TypeScript files via NodeJS as if they were written in plain JavaScript.
-
-To execute a file with `tsx`:
+# Joke Generator
 
 ```sh
-pnpm tsx ./path/to/the/file.ts
+pnpm tsx src/bin.ts joke generate --inspiration "fruit machine"
 ```
 
 ## Operations

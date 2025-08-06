@@ -1,6 +1,6 @@
 import * as Effect from "effect/Effect";
-import * as Domain from "./Domain.js";
-import * as Application from "./Application.js";
+import * as Domain from "../Domain.js";
+import * as Application from "../Application.js";
 
 export const GenerateJokeUseCaseLLM = Application.GenerateJokeUseCaseService.of(
   {
