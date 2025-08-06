@@ -41,32 +41,3 @@ export interface GenerateJokeUseCaseInput {
 export interface GenerateJokeUseCaseService {
   readonly execute: (dto: GenerateJokeUseCaseInput) => GenerateJokeEffect;
 }
-
-export class GenerateJokeUseCase extends Effect.Service<GenerateJokeUseCase>()(
-  "GenerateJokeUseCase",
-  {
-    effect: Effect.gen(function* (_) {
-      const execute = Effect.fn(function* (dto: GenerateJokeUseCaseInput) {
-        const joke = GeneratedJoke.make({
-          inspiration: InspirationPrompt.make(dto.inspiration),
-          joke: Joke.make("Why did the chicken cross the road?"),
-        });
-        return joke;
-      });
-
-      return {
-        execute,
-      } satisfies GenerateJokeUseCaseService;
-    }),
-  },
-) {}
-
-export const customGenerateJokeUseCase = new GenerateJokeUseCase({
-  execute: Effect.fn("customGenerateJokeUseCase")(function* (dto) {
-    const joke = GeneratedJoke.make({
-      inspiration: InspirationPrompt.make(dto.inspiration),
-      joke: Joke.make("This is really funny…"),
-    });
-    return joke;
-  }),
-});
