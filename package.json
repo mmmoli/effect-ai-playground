@@ -24,6 +24,8 @@
     "coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@effect/ai": "^0.25.0",
+    "@effect/ai-anthropic": "^0.15.0",
     "@effect/cli": "^0.69.0",
     "@effect/platform": "^0.90.0",
     "@effect/platform-node": "^0.94.1",

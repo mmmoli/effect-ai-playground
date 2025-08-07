@@ -1,8 +1,8 @@
 import * as Effect from "effect/Effect";
 import * as cli from "@effect/cli";
 import * as Command from "@effect/cli/Command";
-import * as Domain from "../Domain.js";
-import * as Application from "../Application.js";
+import * as Domain from "../Domain/Joke.js";
+import * as Application from "../Application/GenerateJokeUseCaseService.js";
 
 export const commandGenerate = Command.make(
   "generate",
@@ -14,11 +14,8 @@ export const commandGenerate = Command.make(
   ({ inspirationStr }) =>
     Effect.gen(function* (_) {
       const inspiration = Domain.InspirationPrompt.make(inspirationStr);
-      const usecase = yield* _(Application.GenerateJokeUseCaseService);
-      const result = yield* _(
-        usecase.execute({
-          inspiration,
-        }),
+      const result = yield* _(Application.GenerateJokeUseCase).pipe(
+        Effect.flatMap((usecase) => usecase.execute({ inspiration })),
       );
       yield* _(Effect.log(result));
     }),

@@ -1,5 +1,7 @@
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
+import * as Data from "effect/Data";
+import * as Context from "effect/Context";
 
 export const InspirationPrompt = Schema.NonEmptyTrimmedString.pipe(
   Schema.brand("InspirationPrompt"),
@@ -32,12 +34,33 @@ export const GeneratedJoke = Schema.Struct({
 
 export type GeneratedJoke = Schema.Schema.Type<typeof GeneratedJoke>;
 
-export type GenerateJokeEffect = Effect.Effect<GeneratedJoke>;
+export class JokeGenerationError extends Data.TaggedError(
+  "Domain/Joke/JokeGenerationError",
+)<{
+  data: unknown;
+}> {}
+
+export type GeneratedJokeEffect = Effect.Effect<
+  GeneratedJoke,
+  JokeGenerationError
+>;
+
+// GenerateJokeService
+
+export type GenerateJokeServiceImpl = (
+  inspiration: InspirationPrompt,
+) => GeneratedJokeEffect;
+
+export class GenerateJokeService extends Context.Tag(
+  "Domain/Joke/GenerateJokeService",
+)<GenerateJokeService, GenerateJokeServiceImpl>() {}
+
+// GenerateJokeUseCase
 
 export interface GenerateJokeUseCaseInput {
   inspiration: InspirationPrompt;
 }
 
-export interface GenerateJokeUseCaseService {
-  readonly execute: (dto: GenerateJokeUseCaseInput) => GenerateJokeEffect;
+export interface GenerateJokeUseCaseServiceImpl {
+  readonly execute: (dto: GenerateJokeUseCaseInput) => GeneratedJokeEffect;
 }
