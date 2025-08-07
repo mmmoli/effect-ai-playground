@@ -7,7 +7,7 @@ import * as Layer from "effect/Layer";
 import * as Config from "effect/Config";
 import * as Platform from "@effect/platform-node";
 import * as PlatformEffect from "@effect/platform";
-import { run } from "./Infra/Cli.js";
+import * as Cli from "./Infra/Cli/Cli.js";
 import * as Anthropic from "@effect/ai-anthropic";
 
 const AiModelLayer = Anthropic.AnthropicLanguageModel.layer({
@@ -37,6 +37,6 @@ export const LiveLayer = Layer.mergeAll(
   NodeContext.layer,
 );
 
-const program = run(process.argv).pipe(Effect.provide(LiveLayer));
+const program = Cli.run(process.argv).pipe(Effect.provide(LiveLayer));
 
 program.pipe(NodeRuntime.runMain({ disableErrorReporting: false }));

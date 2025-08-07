@@ -1,9 +1,9 @@
 import * as Effect from "effect/Effect";
 import * as cli from "@effect/cli";
 import * as Command from "@effect/cli/Command";
-import * as Domain from "../Domain/Joke.js";
-import * as Application from "../Application/GenerateJokeUseCaseService.js";
-import * as GenerateJokeService from "./GenerateJokeServiceFactory.js";
+import * as Domain from "../../Domain/Joke.js";
+import * as Application from "../../Application/GenerateJokeUseCaseService.js";
+import * as GenerateJokeService from "../GenerateJokeServiceFactory.js";
 
 export const commandGenerate = Command.make(
   "generate",
@@ -18,28 +18,19 @@ export const commandGenerate = Command.make(
       cli.Options.withDefault("naive"),
     ),
   },
-  ({ inspirationStr }) =>
+  ({ inspirationStr, provider }) =>
     Effect.gen(function* (_) {
       const inspiration = Domain.InspirationPrompt.make(inspirationStr);
       const usecase = yield* _(Application.GenerateJokeUseCase);
       const result = yield* _(usecase.execute({ inspiration }));
       yield* _(Effect.log(result));
-    }),
-).pipe(
-  Command.withDescription("Generates a random joke."),
-  Command.provide(Application.GenerateJokeUseCase.Default),
-  Command.provideEffect(
-    Domain.GenerateJokeService,
-    GenerateJokeService.makeGenerateJokeServiceLLM,
-  ),
-);
-
-const command = Command.make("joke").pipe(
-  Command.withDescription("Devilishly smart financial forecasting."),
-  Command.withSubcommands([commandGenerate]),
-);
-
-export const run = Command.run(command, {
-  name: "Jokester",
-  version: "1.0.0",
-});
+    }).pipe(
+      Effect.provide(Application.GenerateJokeUseCase.Default),
+      Effect.provideServiceEffect(
+        Domain.GenerateJokeService,
+        provider === "llm"
+          ? GenerateJokeService.makeGenerateJokeServiceLLM
+          : GenerateJokeService.makeGenerateJokeServiceNaive,
+      ),
+    ),
+).pipe(Command.withDescription("Generates a random joke."));
