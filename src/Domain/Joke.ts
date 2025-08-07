@@ -25,6 +25,7 @@ export type Joke = Schema.Schema.Type<typeof Joke>;
 export const GeneratedJoke = Schema.Struct({
   inspiration: InspirationPrompt,
   joke: Joke,
+  createdAt: Schema.DateFromString,
 }).pipe(
   Schema.annotations({
     identifier: "GeneratedJoke",

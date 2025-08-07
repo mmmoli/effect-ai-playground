@@ -9,6 +9,7 @@ export const makeGenerateJokeServiceNaive = Effect.gen(function* (_) {
         return Domain.GeneratedJoke.make({
           inspiration,
           joke: Domain.Joke.make("Why did the chicken cross the road?"),
+          createdAt: new Date(),
         });
       },
     ),
@@ -46,6 +47,7 @@ export const makeGenerateJokeServiceLLM = Effect.gen(function* (_) {
         return Domain.GeneratedJoke.make({
           inspiration,
           joke,
+          createdAt: new Date(),
         });
       },
     ),
